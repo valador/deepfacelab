@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-export DFL_PYTHON="python3.8"
+export DFL_PYTHON="python3.7"
 export DFL_WORKSPACE="$DEEPFACELAB_WORKSPACE"
+export DFL_SRC="$DEEPFACELAB_PATH"
 
 if [ ! -d "$DFL_WORKSPACE" ]; then
     mkdir "$DFL_WORKSPACE"
