@@ -95,6 +95,15 @@ RUN apt-get --purge -y autoremove git \
     && rm -rvf /home/${ANACONDA_PATH}/.cache/yarn \
     && fix-permissions ${HOME} \
     && fix-permissions ${ANACONDA_PATH}
+# X11 fix
+# RUN chown -R ${ANACONDA_USER} /usr/share/X11 \
+#     && chmod -R ugo+rwx /usr/share/X11 \
+#     && chown -R ${ANACONDA_USER} /etc/X11 \
+#     && chmod -R ugo+rwx /etc/X11 \
+#     && chown -R ${ANACONDA_USER} /tmp/ \
+#     && chmod -R ugo+rwx /tmp/
+    # && chown -R ${ANACONDA_USER} /dev/tty0 \
+    # && chmod -R ugo+rwx /dev/tty0
 
 # Re-activate user "anaconda"
 USER $ANACONDA_UID
