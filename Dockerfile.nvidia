@@ -24,7 +24,7 @@ LABEL description="DeepFaceLab GPU Container"
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
-ENV DEEPFACELAB_PYTHON=python3.10
+ENV DEEPFACELAB_PYTHON=python3.7
 ENV DEEPFACELAB_HOME=${HOME}/deepfacelab
 ENV DEEPFACELAB_WORKSPACE=${DEEPFACELAB_PATH}/workspace
 ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
@@ -33,9 +33,9 @@ ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
 USER root
 
 # Update packages
-# RUN apt-get update --fix-missing \
-#     && apt-get -y upgrade \
-#     && apt-get -y dist-upgrade
+RUN apt-get update --fix-missing \
+    && apt-get -y upgrade \
+    && apt-get -y dist-upgrade
 
 # Install dependencies
 RUN apt-get update \
@@ -55,27 +55,28 @@ WORKDIR ${HOME}
 # Update Anaconda
 RUN conda update -c defaults conda
 
-# Create environment and install dependencies
-RUN conda create -c nvidia -n deepfacelab python=3.10.6 cudnn=8.4.1 cudatoolkit=11.8.0
+# Create environment and install dependencies(as soft in nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04). Double install? Maby conda not need? 
+RUN conda create -c conda-forge -n deepfacelab python=3.7 cudnn=8.4.0.27 cudatoolkit=11.6.0
+# TensorFlow Deprecating Python 3.7 Support after TF 2.11
 RUN conda run -n deepfacelab pip3 install \
     tqdm \
-    numpy \
+    numpy==1.20 \
     numexpr \
-    h5py \
-    opencv-python \
-    ffmpeg-python \
-    scikit-image \
-    scipy \
+    h5py==2.10.0 \
+    opencv-python==4.1.0.25 \
+    ffmpeg-python==0.1.17 \
+    scikit-image==0.14.2 \
+    scipy==1.4.1 \
     colorama \
-    tensorflow \
+    tensorflow==2.11.0 \
     pyqt5 \
     && conda clean -afy
 
-# Custom cache invalidation
+# Custom cache invalidation for git update(if use fork)
 ARG CACHEBUST=1
 
 # Install rife from github repo
-RUN git clone https://github.com/valador/DeepFaceLab-source.git ${DEEPFACELAB_PATH} \
+RUN git clone https://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
