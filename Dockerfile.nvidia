@@ -41,8 +41,7 @@ RUN apt-get update --fix-missing \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends  \
     git \
-    libglu1-mesa-dev \
-    nano
+    libglu1-mesa-dev
 
 # Create DeepFaceLab directory
 RUN mkdir -p ${DEEPFACELAB_PATH} \
